@@ -3,8 +3,8 @@ const nodemailer = require("nodemailer");
 const user = require('../models/user');
 const generateToken = require('../util/generateToken');
 const bcrypt = require('bcryptjs');
+const appConfig = require("../config/appConfig");
 require('dotenv').config();
-
 
 // Register
 const Register = asynchandler(async (req, res) => {
@@ -106,14 +106,14 @@ const requestPasswordReset = asynchandler(async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            pass: process.env.EMAIL_APP_PASSWORD,
-            user: process.env.EMAIL_ID,
+            pass: appConfig.externalServices.emailAppPassword,
+            user: appConfig.externalServices.emailID,
         }
     });
 
     // format of the email
     const mailOptions = {
-        from: process.env.EMAIL_ID,
+        from: appConfig.externalServices.emailID,
         to: req.body.email,
         subject: "Password resest otp",
         text: `Your OTP (It's expired after 6min) : ${otp}`,
@@ -174,7 +174,5 @@ module.exports={
     requestPasswordReset,
     resetPassword
 };
-
-
 
 
